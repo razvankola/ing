@@ -1,0 +1,22 @@
+# Directoare folosite pe VM
+base_dir: /opt
+monitoring_dir: /opt/monitoring
+prometheus_dir: /opt/monitoring/prometheus
+grafana_dir: /opt/monitoring/grafana
+
+$ User de aplicatie
+app_owner: appuser
+
+# Setari container
+app_name: petclinic
+app_port: 8080
+app_metrics_path: /actuator/prometheus
+
+# Prometheus/Grafana images
+prometheus_image: "docker.io/prom/prometheus:v2.54.1"
+grafana_image: "docker.io/grafana/grafana:11.2.0"
+
+grafana_admin_user: "admin"
+
+# Node exporter version
+node_exporter_version: "1.7.0"

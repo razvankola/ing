@@ -1,0 +1,14 @@
+[Unit]
+Description={{ app_name }} (Podman)
+After=network.target
+Wants=network.target
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/podman run --rm --name {{ app_name }} \
+  -p {{ app_port }}:{{ app_port }} \
+  {{ app_image }}
+ExecStop=/usr/bin/podman stop -t 10 {{ app_name }}
+
+[Install]
+WantedBy=multi-user.target

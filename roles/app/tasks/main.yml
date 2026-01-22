@@ -1,0 +1,44 @@
+- name: Install app systemd unit
+  template:
+    src: app.container.service.j2
+    dest: "/etc/systemd/system/{{ app_name }}.service"
+    mode: "0644"
+
+- name: Enable and start app
+  systemd:
+    name: "{{ app_name }}"
+    enabled: true
+    state: started
+    daemon_reload: true
+
+- name: Create /opt/petclinic
+  file:
+    path: /opt/petclinic
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Install petclinic systemd unit
+  template:
+    src: petclinic-jar.service.j2
+    dest: /etc/systemd/system/petclinic-jar.service
+    mode: "0644"
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable petclinic service
+  systemd:
+    name: petclinic-jar
+    enabled: yes
+
+- name: Enable user rkolanov to restart petclinicjar service and copy jar without password for pipeline
+  copy:
+    dest: /etc/sudoers.d/petclinic-pipeline
+    content: |
+      rkolanov ALL=(ALL) NOPASSWD: /bin/cp, /bin/mkdir, /bin/chmod, /bin/chown, /bin/systemctl
+    owner: root
+    group: root
+    mode: "0440"

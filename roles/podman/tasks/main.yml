@@ -1,0 +1,13 @@
+- name: Install podman
+  apt:
+    name: podman
+    state: present
+
+- name: Show podman version
+  command: podman --version
+  register: podman_version
+  changed_when: false
+
+- name: Debug podman version
+  debug:
+    msg: "{{ podman_version.stdout }}"

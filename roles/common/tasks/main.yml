@@ -1,0 +1,38 @@
+- name: Update apt cache
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install base tools
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - wget
+      - gnupg
+      - jq
+      - unzip
+      - git
+      - maven
+      - openjdk-17-jdk
+    state: present
+    update_cache: yes
+
+- name: Ensure app owner user exists
+  user:
+    name: "{{ app_owner }}"
+    shell: /bin/bash
+    create_home: true
+    state: present
+
+- name: Create monitoring directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ app_owner }}"
+    group: "{{ app_owner }}"
+    mode: "0755"
+  loop:
+    - "{{ monitoring_dir }}"
+    - "{{ prometheus_dir }}"
+    - "{{ grafana_dir }}"

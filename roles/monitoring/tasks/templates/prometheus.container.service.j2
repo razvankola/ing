@@ -1,0 +1,16 @@
+[Unit]
+Description=Prometheus (Podman)
+After=network.target
+Wants=network.target
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/podman run --rm --name prometheus \
+  -p 9090:9090 \
+  -v {{ prometheus_dir }}/prometheus.yml:/etc/prometheus/prometheus.yml \
+  -v {{ prometheus_dir }}/data:/prometheus \
+  {{ prometheus_image }}
+ExecStop=/usr/bin/podman stop -t 10 prometheus
+
+[Install]
+WantedBy=multi-user.target
